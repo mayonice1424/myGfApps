@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "expo-router"; // Gunakan useRouter dari expo-router
 import { Animated, View, Text } from "react-native";
 import SplashScreen from "./splashScreenLoading"; // Komponen splash screen
-
+import LottieView from "lottie-react-native";
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter(); // Inisialisasi useRouter
-
+  const animation = useRef<LottieView>(null);
   const fadeAnim = useRef(new Animated.Value(0)).current; // Referensi animasi untuk fade
 
   useEffect(() => {
@@ -22,30 +22,26 @@ export default function Index() {
 
   useEffect(() => {
     if (!isLoading) {
-      // Mulai animasi fade-in saat login
       Animated.timing(fadeAnim, {
-        toValue: 1, // Opacity menjadi 1
-        duration: 1000, // Durasi transisi 1 detik
+        toValue: 1,
+        duration: 1000,
         useNativeDriver: true,
       }).start();
 
-      // Setelah animasi selesai, arahkan ke halaman login atau tabs
       setTimeout(() => {
         if (isLoggedIn) {
-          router.replace("/(tabs)"); // Arahkan ke tabs jika logged in
+          router.replace("/(tabs)");
         } else {
-          router.replace("/login"); // Arahkan ke login jika belum logged in
+          router.replace("/login");
         }
-      }, 1000); // Menunggu animasi selesai sebelum navigasi
+      }, 1000);
     }
   }, [isLoading, isLoggedIn, router, fadeAnim]);
 
-  // Render splash screen jika sedang loading
   if (isLoading) {
-    return <SplashScreen />; // Menampilkan komponen splash screen
+    return <SplashScreen />;
   }
 
-  // Animasi transisi untuk login page
   return (
     <Animated.View
       style={{
@@ -56,8 +52,15 @@ export default function Index() {
         backgroundColor: "white",
       }}
     >
-      {/* Halaman login atau konten lainnya */}
-      <Text>Redirecting...</Text>
+      <LottieView
+        autoPlay
+        ref={animation}
+        style={{
+          width: 200,
+          height: 200,
+        }}
+        source={require("../assets/Loading/Animation - 1744008341198.json")}
+      />
     </Animated.View>
   );
 }

@@ -14,6 +14,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      // className="bg-red-500"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
@@ -32,19 +33,29 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarStyle: { display: "none" },
+          // tabBarStyle: { display: "none" },
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
           ),
         }}
       />
       {/* <Tabs.Screen
+        name="inbox"
+        options={{
+          title: "Explore",
+          // tabBarStyle: { display: "none" },
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          ),
+        }}
+      /> */}
+      <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
-      /> */}
+      />
     </Tabs>
   );
 }
