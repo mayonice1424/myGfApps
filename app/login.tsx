@@ -11,14 +11,9 @@ import {
   Text,
 } from "react-native";
 import React, { useState } from "react";
-import { useNavigation } from "expo-router";
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
-// import HomeScreen from "./(tabs)/index";
 import { useRouter } from "expo-router";
+import { PoppinsText } from "@/components/PoppinsText/poppinsText";
 export default function Login() {
   const [focusedUsername, setFocusedUsername] = useState(false);
   const [focusedPassword, setFocusedPassword] = useState(false);
@@ -66,9 +61,12 @@ export default function Login() {
                   source={require("../assets/images/Frame 307 (2).png")}
                 />
               </View>
-              <Text className="font-medium text-lg text-blue-500 mt-10 ">
+              <PoppinsText
+                weight="600SemiBold"
+                className=" text-lg text-blue-500 mt-10 "
+              >
                 Username
-              </Text>
+              </PoppinsText>
               <TextInput
                 placeholder="Username"
                 style={{
@@ -82,9 +80,12 @@ export default function Login() {
                 onFocus={() => setFocusedUsername(true)}
                 onBlur={() => setFocusedUsername(false)}
               />
-              <Text className="font-medium text-lg text-blue-500  ">
+              <PoppinsText
+                weight="600SemiBold"
+                className=" text-lg text-blue-500  "
+              >
                 Password
-              </Text>
+              </PoppinsText>
               <TextInput
                 placeholder="********"
                 secureTextEntry
@@ -101,7 +102,9 @@ export default function Login() {
                 onPress={handleLoginPress}
                 className="bg-[##5E91E9] h-[45px] flex justify-center items-center rounded-md mt-8"
               >
-                <Text className="font-medium text-xl text-white">Sign Up</Text>
+                <PoppinsText className="font-medium text-xl text-white">
+                  Sign Up
+                </PoppinsText>
               </TouchableOpacity>
             </View>
           </View>
