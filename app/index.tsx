@@ -1,21 +1,21 @@
 // app/index.tsx
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "expo-router"; // Gunakan useRouter dari expo-router
+import { useRouter } from "expo-router"; 
 import { Animated, View, Text } from "react-native";
-import SplashScreen from "./splashScreenLoading"; // Komponen splash screen
+import SplashScreen from "./splashScreenLoading";
 import LottieView from "lottie-react-native";
+
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router = useRouter(); // Inisialisasi useRouter
+  const router = useRouter(); 
   const animation = useRef<LottieView>(null);
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Referensi animasi untuk fade
-
+  const fadeAnim = useRef(new Animated.Value(0)).current; 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoggedIn(false); // Ganti dengan kondisi login yang sesungguhnya
-      setIsLoading(false); // Setelah loading selesai
-    }, 3000); // Waktu splash screen, misal 3 detik
+      setIsLoggedIn(false); 
+      setIsLoading(false);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);

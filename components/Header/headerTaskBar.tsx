@@ -35,14 +35,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerStatus: {
-    position: "absolute", // Fixed position at the top
+    position: "absolute", 
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 40, // Ensure it stays on top of content
-    height: 40, // Adjust height as needed
-    justifyContent: "center", // Align content vertically
-    alignItems: "center", // Center items horizontally
+    zIndex: 10,
+    height: 40, 
+    justifyContent: "center",
+    alignItems: "center", 
   },
 });
 

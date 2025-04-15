@@ -4,79 +4,144 @@ import {
   TouchableWithoutFeedback,
   Linking,
   Platform,
+  Image,
 } from "react-native";
 import {
   FontAwesome,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import {
+  useNavigation,
+  useRouter,
+  useLocalSearchParams,
+  Link,
+} from "expo-router";
 import { PoppinsText } from "../PoppinsText/poppinsText";
+import Approval from "./../../app/approval";
 
-// Tipe untuk props komponen
 type CardAppsProps = {
-  altText: string; // Tipe untuk alt text
-  Title: string; // Judul aplikasi
-  subTitle: string; // Subjudul aplikasi
+  altText: string;
+  Title: string;
+  subTitle: string;
+  link?: string;
+  onPress: () => void;
 };
 
-const CardApps = ({ altText, Title, subTitle }: CardAppsProps) => {
-  // Fungsi untuk membuka aplikasi Microsoft Teams atau aplikasi lainnya
-  const openApp = (appUrl: string) => {
-    Linking.canOpenURL(appUrl)
-      .then((supported) => {
-        if (supported) {
-          Linking.openURL(appUrl); // Membuka aplikasi jika terpasang
-        } else {
-          // Jika aplikasi tidak terpasang, arahkan pengguna ke halaman aplikasi di Play Store
-
-          const storeUrl =
-            Platform.OS === "android" && Title == "MS Teams"
-              ? "https://play.google.com/store/apps/details?id=com.microsoft.teams"
-              : Platform.OS === "ios" && Title == "MS Teams"
-                ? "https://apps.apple.com/us/app/microsoft-teams/id1113153706"
-                : Platform.OS === "android" && Title == "HRIS"
-                  ? "https://play.google.com/store/apps/details?id=com.proint.hc.mobile&hl=id"
-                  : "https://play.google.com/store/apps/details?id=com.proint.hc.mobile&hl=id"; // Gantilah dengan App Store URL jika iOS
-          Linking.openURL(storeUrl); // Arahkan ke halaman aplikasi di Play Store/App Store
-        }
-      })
-      .catch((err) => console.error("An error occurred", err)); // Tangani error jika terjadi
+const CardApps = ({
+  altText,
+  Title,
+  subTitle,
+  link,
+  onPress,
+}: CardAppsProps) => {
+  const navigation = useRouter();
+  const params = useLocalSearchParams();
+  const { linkParams = link } = params;
+  const handleLoginPress = () => {
+    if (link && link.startsWith("/")) {
+      navigation.push(link as any);
+    } else {
+      navigation.push({ pathname: "/webView", params: { linkParams } });
+    }
   };
+
+  // const openApp = (appUrl: string) => {
+  //   Linking.canOpenURL(appUrl)
+  //     .then((supported) => {
+  //       if (supported) {
+  //         Linking.openURL(appUrl);
+  //       } else {
+  //         const storeUrl =
+  //           Platform.OS === "android" && Title == "MS Teams"
+  //             ? "https://play.google.com/store/apps/details?id=com.microsoft.teams"
+  //             : Platform.OS === "ios" && Title == "MS Teams"
+  //               ? "https://apps.apple.com/us/app/microsoft-teams/id1113153706"
+  //               : Platform.OS === "android" && Title == "HRIS"
+  //                 ? "https://play.google.com/store/apps/details?id=com.proint.hc.mobile&hl=id"
+  //                 : "https://play.google.com/store/apps/details?id=com.proint.hc.mobile&hl=id";
+  //         Linking.openURL(storeUrl);
+  //       }
+  //     })
+  //     .catch((err) => console.error("An error occurred", err));
+  // };
+  // const handlePress = () => {
+  // };
 
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        if (Title === "MS Teams") {
-          openApp("msteams://"); // Membuka Microsoft Teams menggunakan skema URL
-        } else if (Title === "HRIS") {
-          openApp(
-            "https://play.google.com/store/apps/details?id=com.proint.hc.mobile&hl=id"
-          ); // Misalnya, ganti dengan URL aplikasi HRIS Anda
-        }
+        handleLoginPress();
       }}
     >
       <View className="flex w-full flex-col items-center justify-center rounded-xl">
-        <View className="flex items-center justify-center mb-4 border-white border rounded-full w-20 h-20">
+        <View
+          className="flex items-center justify-center mb-2 bg-white "
+          style={{
+            borderColor: "#D6E3EB",
+            borderRadius: 10,
+            width: 50,
+            height: 50,
+            shadowColor: "#333333",
+            shadowOffset: {
+              width: 6,
+              height: 6,
+            },
+            shadowOpacity: 0.6,
+            shadowRadius: 4,
+            elevation: 10,
+          }}
+        >
           {/* Menampilkan ikon berdasarkan judul */}
-          {Title === "HRIS" ? (
-            <FontAwesome name="users" size={30} color="#4e97ff" />
-          ) : Title === "ID Card" ? (
-            <FontAwesome name="user" size={30} color="#4e97ff" />
-          ) : Title === "QR Profile" ? (
-            <MaterialIcons name="qr-code-scanner" size={30} color="#4e97ff" />
-          ) : Title === "MS Teams" ? (
+          {Title === "Audit" ? (
+            <Image
+              style={{ width: 30, height: 30 }}
+              source={require("../../assets/images/applications/Isolation_Mode.png")}
+            />
+          ) : Title === "HRIS" ? (
+            <Image
+              style={{ width: 25, height: 30 }}
+              source={require("../../assets/images/applications/HRIS.png")}
+            />
+          ) : // <FontAwesome name="user" size={30} color="#4e97ff" />
+          Title === "Event Organizer" ? (
+            <Image
+              style={{ width: 40, height: 40 }}
+              source={require("../../assets/images/applications/EventOrganizer.png")}
+            />
+          ) : Title === "BCS" ? (
+            <Image
+              style={{ width: 30, height: 30 }}
+              source={require("../../assets/images/applications/Bcs.png")}
+            />
+          ) : Title === "Teams" ? (
+            <Image
+              style={{ width: 40, height: 40 }}
+              source={require("../../assets/images/applications/Microsoft_Teams.png")}
+            />
+          ) : Title === "Rolling" ? (
+            <Image
+              style={{ width: 35, height: 25 }}
+              source={require("../../assets/images/applications/Rolling.png")}
+            />
+          ) : Title === "Approval Cuti" ? (
             <MaterialCommunityIcons
-              name="microsoft-teams"
+              name="account-check"
               size={30}
               color="#4e97ff"
             />
           ) : (
-            <FontAwesome name="th-large" size={30} color="#4e97ff" />
+            <Image
+              style={{ width: 35, height: 25 }}
+              source={require("../../assets/images/applications/Windows.png")}
+            />
           )}
         </View>
 
-        {/* Judul Aplikasi */}
-        <PoppinsText className="text-sm text-center text-zinc-600 mt-2">
+        <PoppinsText
+          weight="600SemiBold"
+          className="text-sm text-center text-zinc-600 mt-2"
+        >
           {Title}
         </PoppinsText>
       </View>

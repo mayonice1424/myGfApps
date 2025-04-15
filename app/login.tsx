@@ -82,7 +82,7 @@ export default function Login() {
               />
               <PoppinsText
                 weight="600SemiBold"
-                className=" text-lg text-blue-500  "
+                className=" text-lg text-blue-500"
               >
                 Password
               </PoppinsText>

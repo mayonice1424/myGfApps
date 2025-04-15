@@ -42,6 +42,9 @@ export default function RootLayout() {
           name="splashScreenLoading"
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="webView" options={{ headerShown: false }} />
+        <Stack.Screen name="approval" options={{ headerShown: false }} />
+        <Stack.Screen name="semuaMenu" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />

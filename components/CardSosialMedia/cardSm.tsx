@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
   View,
@@ -8,6 +9,7 @@ import {
   StyleSheet,
   Linking,
 } from "react-native";
+import { PoppinsText } from "../PoppinsText/poppinsText";
 
 type CardSmProps = {
   imageSrc: object;
@@ -54,7 +56,23 @@ const CardSm = ({
       </Text>
 
       <TouchableOpacity onPress={handlePress} style={styles.linkButton}>
-        <Text style={styles.linkText}>Read More on {from}</Text>
+        <LinearGradient
+          colors={["#07A9CE", "#11599B"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            paddingHorizontal: 8,
+            paddingVertical: 5,
+            borderRadius: 100,
+          }}
+        >
+          <PoppinsText weight="500Medium" style={styles.linkText}>
+            Read More on {from}
+          </PoppinsText>
+        </LinearGradient>
       </TouchableOpacity>
     </View>
   );
@@ -62,8 +80,17 @@ const CardSm = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    padding: 10,
-    backgroundColor: "#fff",
+    shadowColor: "#333333",
+    shadowOffset: {
+      width: 6,
+      height: 6,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 4,
+    elevation: 2,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 20,
     borderWidth: 1,
@@ -75,7 +102,6 @@ const styles = StyleSheet.create({
 
     aspectRatio: "5/2.3",
     borderRadius: 10,
-    marginBottom: 5,
     backgroundColor: "#f0f0f0",
   },
   separator: {
@@ -107,9 +133,9 @@ const styles = StyleSheet.create({
   },
   linkButton: {
     marginTop: 10,
-    backgroundColor: "#4e97ff",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    // backgroundColor: "#4e97ff",
+    // paddingVertical: 8,
+    // paddingHorizontal: 12,
     borderRadius: 5,
   },
   linkText: {

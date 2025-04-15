@@ -15,6 +15,7 @@ import {
   FontAwesome,
   FontAwesome5,
   Ionicons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
@@ -22,7 +23,6 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    
     <Tabs
       // className="bg-red-500"
       screenOptions={{
@@ -37,12 +37,20 @@ export default function TabLayout() {
           backgroundColor: "white",
           left: 16,
           right: 16,
-          height: 60,
-          elevation: 0,
+          height: 50,
+          shadowColor: "#333333",
+          shadowOffset: {
+            width: 6,
+            height: 20,
+          },
+          shadowOpacity: 0.6,
+          shadowRadius: 4,
+          elevation: 1000,
+
           alignItems: "center",
           justifyContent: "center",
         },
-        tabBarActiveTintColor: "#3155D6", // Customize active tab color here
+        tabBarActiveTintColor: "#062F4D", // Customize active tab color here
         tabBarInactiveTintColor: "#9A9A9A",
       }}
     >
@@ -71,11 +79,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="inbox"
+        name="myQr"
         options={{
-          title: "Inbox",
+          title: "My Qr",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="inbox" color={color} />
+            <MaterialIcons size={28} name="qr-code-scanner" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: "Account",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="account-circle" color={color} />
           ),
         }}
       />
