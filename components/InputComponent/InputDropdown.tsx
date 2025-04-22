@@ -6,6 +6,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import { FormData } from "@/app/approval";
+import { Dropdown } from "react-native-element-dropdown";
 import { PoppinsText } from "@/components/PoppinsText/poppinsText";
 type DataParams = {
   Title: string;
@@ -14,19 +16,21 @@ type DataParams = {
   required: boolean;
   focusedInput: boolean;
   inputType: string;
-  value: string | number | null;
-  onChange: (value: string) => void;
+  value: string | number | null | undefined;
+  data: Array<object> | undefined;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 };
-
-const TouchableDefaultType: React.FC<DataParams> = ({
+const ToucableDropdown: React.FC<DataParams> = ({
   Title,
+  data,
   placeholder,
   required,
   inputType,
   focusedInput,
   setFocusedInput,
+  setFormData,
   value,
-  onChange,
+  // onChange,
 }) => {
   let keyboardType:
     | "default"
@@ -50,16 +54,18 @@ const TouchableDefaultType: React.FC<DataParams> = ({
       keyboardType = "default";
       break;
   }
+  const allData = data;
 
   useEffect(() => {}, [value]);
+  const handleChange = (selectedValue: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      cutiType: selectedValue, // Menyimpan nilai yang dipilih
+    }));
+  };
   return (
     <View className="flex flex-row justify-between">
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss;
-          setFocusedInput(true);
-        }}
-      >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View
           style={{
             flex: 1,
@@ -87,9 +93,7 @@ const TouchableDefaultType: React.FC<DataParams> = ({
             ) : null}
           </View>
 
-          <TextInput
-            value={value == undefined ? null : (value as any)}
-            placeholder={placeholder}
+          <Dropdown
             style={{
               height: 45,
               borderColor: focusedInput ? "#5E91E9" : "gray",
@@ -97,10 +101,39 @@ const TouchableDefaultType: React.FC<DataParams> = ({
               paddingHorizontal: 5,
               marginBottom: 10,
             }}
+            autoScroll={true}
+            placeholderStyle={{
+              fontSize: 13,
+              color: "gray",
+              fontFamily: "Poppins_500Medium",
+            }}
+            selectedTextStyle={{
+              fontSize: 13,
+              color: "gray",
+              fontFamily: "Poppins_500Medium",
+            }}
+            inputSearchStyle={{
+              fontSize: 13,
+              color: "gray",
+              fontFamily: "Poppins_500Medium",
+            }}
+            itemTextStyle={{
+              fontSize: 13,
+              color: "gray",
+              fontFamily: "Poppins_500Medium",
+            }}
+            iconStyle={styles.iconStyle}
+            data={allData as any}
+            search
+            maxHeight={200}
+            labelField="label"
+            valueField="value"
+            placeholder={!focusedInput ? "Select item" : "..."}
+            searchPlaceholder="Search..."
+            value={value}
             onFocus={() => setFocusedInput(true)}
             onBlur={() => setFocusedInput(false)}
-            keyboardType={keyboardType}
-            onChangeText={(text) => onChange(text)} // Pass the text as string to the handler
+            onChange={(item) => handleChange(item.label)} // Pass the text as string to the handler
           />
         </View>
       </TouchableWithoutFeedback>
@@ -114,6 +147,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "red",
   },
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 12,
+  },
+  iconStyle: {
+    width: 25,
+    height: 25,
+    // backgroundColor: "red",
+    color: "black",
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
 });
 
-export default TouchableDefaultType;
+export default ToucableDropdown;

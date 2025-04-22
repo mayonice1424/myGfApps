@@ -72,7 +72,7 @@ const applications = [
     subTitle: "HRIS Application",
     altText: "Logo",
     link: "https://play.google.com/store/apps/details?id=com.proint.hc.mobile&hl=id",
-  },
+  },  
   {
     title: "BCS",
     subTitle: "Collaboration app for hybrid work",
