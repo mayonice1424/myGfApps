@@ -216,8 +216,8 @@ export default function HomeScreen() {
                       <View
                         style={{
                           backgroundColor: "#D9D9D9",
-                          width: 60,
-                          height: 60,
+                          width: 55,
+                          height: 55,
                           marginLeft: 10,
                           borderRadius: "100%",
                           display: "flex",
@@ -227,7 +227,7 @@ export default function HomeScreen() {
                       >
                         <FontAwesome5
                           name="user-alt"
-                          size={25}
+                          size={22}
                           color={"#6166A2"}
                         />
                       </View>

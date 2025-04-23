@@ -1,101 +1,78 @@
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { StyleSheet, View, ScrollView, TouchableOpacity } from "react-native";
 import { PoppinsText } from "@/components/PoppinsText/poppinsText";
-import { LinearGradient } from "expo-linear-gradient";
-import CardSm from "@/components/CardSosialMedia/cardSm";
 import HeaderWithBack from "@/components/Header/headerWithBack";
 import { useRouter } from "expo-router";
+// import QRCode from "react-native-qrcode-svg"; // QRCode from the right package
+import { FontAwesome5 } from "@expo/vector-icons";
+
 export default function Account() {
   const navigation = useRouter();
+
   return (
-    <LinearGradient
-      colors={["#FFFFFF", "#FFFFFF", "#FFFFFF"]}
-      locations={[0, 0.1, 1]}
-      className="flex-1  bg-[#f5f8ff00] h-screen flex justify-center items-center"
-    >
+    <View>
       <HeaderWithBack title="My Qr" />
       <ScrollView
         contentInset={{ bottom: 20 }}
-        className="w-full h-full flex bg-white "
+        className="w-full h-full flex bg-white"
       >
         <View
-          className="top-0 w-full flex   justify-center items-center"
-          style={{ paddingVertical: 70, paddingHorizontal: 10 }}
+          className="top-0 w-full flex mt-10 justify-center items-center"
+          style={{ paddingHorizontal: 50 }}
         >
           <View
-            className="flex  flex-wrap w-full h-full    flex-row justify-between"
-            style={{
-              paddingHorizontal: 40,
-              paddingVertical: 50,
-              borderRadius: 10,
-            }}
+            className="flex flex-wrap w-full h-full flex-row justify-between"
+            style={{ marginTop: 40, borderRadius: 10 }}
           >
             <View
-              className="w-full  bg-red-500  justify-center items-center  h-1/2"
+              className="w-full flex justify-evenly flex-col items-center"
               style={{ backgroundColor: "#062F4D" }}
             >
               <PoppinsText
                 weight="700Bold"
-                className="text-white text-center rounded-lg  w-full"
-                style={{ backgroundColor: "#062F4D" }}
+                className="text-white text-center rounded-lg w-full"
               >
                 Scan Here
               </PoppinsText>
-              <Image source={require("../../assets/images/qr_generator.png")} />
+              <View>
+                {/* <QRCode value="http://awesome.link.qr" /> */}
+              </View>
               <PoppinsText
                 weight="700Bold"
-                className="text-white text-center rounded-lg  w-full"
-                style={{ backgroundColor: "#062F4D" }}
+                className="text-white text-center rounded-lg w-full"
               >
                 Scan Here
               </PoppinsText>
             </View>
-            <PoppinsText
-              weight="500Medium"
-              className="  w-full flex justify-center items-center text-center"
-              style={{ paddingVertical: 70 }}
-            >
-              Pindai Disini
-            </PoppinsText>
-            <PoppinsText
-              weight="500Medium"
-              className="  w-full flex justify-center items-center text-center"
-              style={{ paddingBottom: 10 }}
-            >
-              atau
-            </PoppinsText>
-
-            <TouchableOpacity
-              onPress={() => {
-                navigation.push({ pathname: "/webView" });
-              }}
-            >
-              <PoppinsText
-                weight="500Medium"
-                className="  w-full flex justify-center items-center text-center"
-                style={{ paddingVertical: 20 }}
+            <View className="mt-10 w-full gap-y-3">
+              <TouchableOpacity
+                onPress={() => navigation.push({ pathname: "/qrCodeScanner" })}
               >
-                Pindai untuk mengetahui kontak pengguna
-              </PoppinsText>
-            </TouchableOpacity>
+                <View
+                  style={{ borderRadius: 20 }}
+                  className="flex flex-row w-full bg-blue-500 justify-center items-center text-center"
+                >
+                  <FontAwesome5 name="camera" size={20} color="white" />
+                  <PoppinsText
+                    weight="600SemiBold"
+                    style={{
+                      color: "white",
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      backgroundColor: "#3b82f6",
+                    }}
+                  >
+                    Open Camera
+                  </PoppinsText>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",

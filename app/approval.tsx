@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -19,15 +19,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import ToucableDropdown from "@/components/InputComponent/InputDropdown";
 import { Poppins_400Regular } from "@expo-google-fonts/poppins";
-// Define the form data types
-export type FormData = {
-  name: string;
-  email: string;
-  lamaCuti: number | null;
-  cutiType: string;
-  date: string; // Store the date as a string
-};
-
+import axios from "axios";
 const form = [
   {
     form: [
@@ -44,14 +36,14 @@ const form = [
         placeholder: "example@example.com",
         required: true,
         type: "email",
-        name: "name",
+        name: "email",
         value: null,
       },
       {
         title: "Jenis Cuti",
         placeholder: "Select Cuti Type",
         required: true,
-        name: "name",
+        name: "jenisCuti",
         value: null,
         type: "select",
         options: [
@@ -63,11 +55,24 @@ const form = [
         ],
       },
       {
+        title: "Assign Tugas",
+        placeholder: "Select Cuti Tugas",
+        required: true,
+        name: "assignTugas",
+        value: null,
+        type: "select",
+        options: [
+          { label: "Ilham", value: "1" },
+          { label: "Robi", value: "2" },
+          { label: "Firly", value: "3" },
+        ],
+      },
+      {
         title: "Lama Cuti",
         placeholder: "4",
         required: true,
         type: "number",
-        name: "name",
+        name: "lamaCuti",
         value: null,
       },
       {
@@ -75,7 +80,7 @@ const form = [
         placeholder: "MM/DD/YYYY",
         required: true,
         type: "datetime",
-        name: "name",
+        name: "date",
         value: null,
       },
     ],
@@ -113,15 +118,17 @@ export default function Approval() {
   const formattedLastDay = `${lastDayOfMonth.getDate()} ${lastDayOfMonth.toLocaleString("default", { month: "long" })} ${lastDayOfMonth.getFullYear()}`;
   const formattedFirstDay = `${firstDayOfMonth.getDate()} ${firstDayOfMonth.toLocaleString("default", { month: "long" })} ${firstDayOfMonth.getFullYear()}`;
 
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    lamaCuti: null,
-    cutiType: "",
-    date: "",
+  const [formData, setFormData] = useState<{
+    [key: string]: string | number | null | undefined;
+  }>(() => {
+    const initialData: { [key: string]: string | number | null | undefined } =
+      {};
+    form[0].form?.forEach((field) => {
+      initialData[field.name] = field.value; // Set initial value of each field to null or empty
+    });
+    return initialData;
   });
   const idLocale = {
-    // Konfigurasi locale untuk bahasa Indonesia
     months:
       "Januari_Februari_Maret_April_Mei_Juni_Juli_Agustus_September_Oktober_November_Desember".split(
         "_"
@@ -190,8 +197,8 @@ export default function Approval() {
     ordinalParse: /\d{1,2}/,
     ordinal: "%d",
     week: {
-      dow: 1, // Monday is the first day of the week.
-      doy: 7, // The week that contains Jan 1st is the first week of the year.
+      dow: 1,
+      doy: 7,
     },
   };
 
@@ -203,8 +210,9 @@ export default function Approval() {
   const [mode, setMode] = useState("date"); // Track whether we're picking date or time
   const [showTimePicker, setShowTimePicker] = useState(false); // Controls the visibility of the time picker
 
-  const onChangeDate = (e: any, selectedDate: any) => {
+  const onChangeDate = (e: any, selectedDate: any, inputField: any) => {
     const currentDate = selectedDate || date;
+
     if (mode === "date") {
       setDate(currentDate);
       setShowDateTime(false);
@@ -213,6 +221,7 @@ export default function Approval() {
     } else if (mode === "time") {
       setTime(currentDate);
       setShowTimePicker(false);
+
       const combinedDateTime = new Date(
         date.getFullYear(),
         date.getMonth(),
@@ -225,9 +234,10 @@ export default function Approval() {
       const formattedDate = moment(combinedDateTime)
         .utcOffset(7)
         .format("llll");
+
       setFormData((prevState) => ({
         ...prevState,
-        date: formattedDate,
+        [inputField.name]: formattedDate,
       }));
     }
   };
@@ -236,20 +246,50 @@ export default function Approval() {
     const currentData = selectedData || "";
     setFormData((prevState) => ({
       ...prevState,
-      cutiType: currentData, // Save the combined datetime in formData
+      cutiType: currentData, 
     }));
   };
 
-  const handleInputChange = (key: any, value: string) => {
-    setFormData({
-      ...formData,
-      [key]: value, // For other fields, keep them as strings
-    });
+  const handleInputChange = (
+    name: string,
+    value: string | number | null | undefined
+  ) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value, 
+    }));
   };
 
-  const handleSubmit = () => {
-    setShowModal(true);
+  const handleSubmit = async () => {
+    console.log("Masuk handle Login");
+
+    try {
+      const response = await axios.post(
+        "http://192.168.0.116:3000/submit-data",
+        formData,
+        {
+          withCredentials: false, 
+        }
+      );
+
+      console.log("Berhasil Menyimpan", response.data);
+    } catch (error: any) {
+      if (error.response) {
+        // Respons error jika ada, misalnya jika status code bukan 200
+        console.error("Response Error:", error.response);
+      } else if (error.request) {
+        // Error jika permintaan tidak terkirim
+        console.error("Request Error:", error.request);
+      } else {
+        // Kesalahan lainnya
+        console.error("Error:", error.message);
+      }
+    }
   };
+
+  useEffect(() => {
+    console.log(formData, "INI DATA FORM DATA");
+  }, [formData]);
 
   return (
     <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -290,9 +330,7 @@ export default function Approval() {
           {form.map((field, index) => {
             if (field.form) {
               return field.form.map((inputField, idx) => {
-                const key = inputField.title
-                  .toLowerCase()
-                  .replace(" ", "") as keyof FormData;
+                const key = inputField.name;
 
                 if (
                   inputField.type !== "datetime" &&
@@ -302,19 +340,14 @@ export default function Approval() {
                     <TouchableDefaultType
                       focusedInput={false}
                       setFocusedInput={() => {}}
-                      key={idx}
+                      key={inputField.name}
                       Title={inputField.title}
                       placeholder={inputField.placeholder}
                       required={inputField.required}
                       inputType={inputField.type}
-                      value={formData[key]}
+                      value={formData[inputField.name]}
                       onChange={(value) => {
-                        inputField.title == "Lama Cuti"
-                          ? setFormData({
-                              ...formData,
-                              lamaCuti: value as any,
-                            })
-                          : handleInputChange(key, value);
+                        handleInputChange(inputField.name, value);
                       }}
                     />
                   );
@@ -348,7 +381,7 @@ export default function Approval() {
                           setMode("date");
                           setShowDateTime(true);
                         }}
-                        key={idx}
+                        key={inputField.name}
                       >
                         <View
                           style={{
@@ -368,13 +401,10 @@ export default function Approval() {
                               weight="500Medium"
                               style={{ fontSize: 13, color: "gray" }}
                             >
-                              {formData.date == null
+                              {formData[inputField.name] == null ||
+                              formData[inputField.name] === ""
                                 ? "Select Date"
-                                : formData.date == undefined
-                                  ? "Select Date"
-                                  : formData.date == ""
-                                    ? "Select Date"
-                                    : formData.date}
+                                : formData[inputField.name]}
                             </PoppinsText>
                           </View>
                           <View>
@@ -393,7 +423,9 @@ export default function Approval() {
                           value={date}
                           mode="date"
                           is24Hour={true}
-                          onChange={onChangeDate}
+                          onChange={(e, selectedDate) =>
+                            onChangeDate(e, selectedDate, inputField)
+                          }
                         />
                       )}
                       {showTimePicker && (
@@ -401,7 +433,9 @@ export default function Approval() {
                           value={time}
                           mode="time"
                           is24Hour={true}
-                          onChange={onChangeDate}
+                          onChange={(e, selectedDate) =>
+                            onChangeDate(e, selectedDate, inputField)
+                          }
                         />
                       )}
                     </View>
@@ -412,20 +446,15 @@ export default function Approval() {
                       focusedInput={false}
                       setFocusedInput={() => {}}
                       key={idx}
+                      name={inputField.name}
                       Title={inputField.title}
                       placeholder={inputField.placeholder}
                       required={inputField.required}
                       inputType={inputField.type}
-                      value={formData[key]}
+                      value={formData[inputField.name]}
                       data={inputField.options}
-                      setFormData={setFormData}
+                      setFormData={setFormData as any}
                     />
-                    // <View className="flex flex-row justify-between" key={idx}>
-                    //    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-                    //    </TouchableWithoutFeedback>
-                    //   <Text>{inputField.title}</Text>
-                    // </View>
                   );
                 }
               });
@@ -502,21 +531,17 @@ export default function Approval() {
             <PoppinsText weight="500Medium" style={{ fontSize: 18 }}>
               Submitted Data:
             </PoppinsText>
-            <PoppinsText weight="500Medium" style={{ fontSize: 16 }}>
-              Name: {formData.name}
-            </PoppinsText>
-            <PoppinsText weight="500Medium" style={{ fontSize: 16 }}>
-              Email: {formData.email}
-            </PoppinsText>
-            <PoppinsText weight="500Medium" style={{ fontSize: 16 }}>
-              Lama Cuti: {formData.lamaCuti}
-            </PoppinsText>
-            <PoppinsText weight="500Medium" style={{ fontSize: 16 }}>
-              Date: {formData.date}
-            </PoppinsText>
-            <PoppinsText weight="500Medium" style={{ fontSize: 16 }}>
-              Jenis Cuti: {formData.cutiType}
-            </PoppinsText>
+            {Object.keys(formData).map((key) => {
+              return (
+                <PoppinsText
+                  key={key}
+                  weight="500Medium"
+                  style={{ fontSize: 16 }}
+                >
+                  {key}: {formData[key]}
+                </PoppinsText>
+              );
+            })}
 
             <TouchableOpacity
               onPress={() => setShowModal(false)}

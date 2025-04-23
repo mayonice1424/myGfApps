@@ -14,7 +14,7 @@ type DataParams = {
   required: boolean;
   focusedInput: boolean;
   inputType: string;
-  value: string | number | null;
+  value: string | number | null | undefined;
   onChange: (value: string) => void;
 };
 
@@ -96,6 +96,9 @@ const TouchableDefaultType: React.FC<DataParams> = ({
               borderBottomWidth: focusedInput ? 3 : 1.5,
               paddingHorizontal: 5,
               marginBottom: 10,
+              fontSize: 13,
+              color: "gray",
+              fontFamily: "Poppins_500Medium",
             }}
             onFocus={() => setFocusedInput(true)}
             onBlur={() => setFocusedInput(false)}

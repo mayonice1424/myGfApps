@@ -6,7 +6,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { FormData } from "@/app/approval";
 import { Dropdown } from "react-native-element-dropdown";
 import { PoppinsText } from "@/components/PoppinsText/poppinsText";
 type DataParams = {
@@ -16,6 +15,7 @@ type DataParams = {
   required: boolean;
   focusedInput: boolean;
   inputType: string;
+  name: string;
   value: string | number | null | undefined;
   data: Array<object> | undefined;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -24,6 +24,7 @@ const ToucableDropdown: React.FC<DataParams> = ({
   Title,
   data,
   placeholder,
+  name,
   required,
   inputType,
   focusedInput,
@@ -32,36 +33,19 @@ const ToucableDropdown: React.FC<DataParams> = ({
   value,
   // onChange,
 }) => {
-  let keyboardType:
-    | "default"
-    | "numeric"
-    | "email-address"
-    | "phone-pad"
-    | "decimal-pad"
-    | "number-pad" = "default";
-
-  switch (inputType) {
-    case "number":
-      keyboardType = "numeric";
-      break;
-    case "email":
-      keyboardType = "email-address";
-      break;
-    case "datetime":
-      keyboardType = "default";
-      break;
-    default:
-      keyboardType = "default";
-      break;
-  }
   const allData = data;
 
-  useEffect(() => {}, [value]);
   const handleChange = (selectedValue: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      cutiType: selectedValue, // Menyimpan nilai yang dipilih
-    }));
+    console.log(name, value, "ini name");
+
+    setFormData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        [name]: selectedValue,
+      };
+      console.log("Updated formData: ", updatedData);
+      return updatedData;
+    });
   };
   return (
     <View className="flex flex-row justify-between">
@@ -133,7 +117,10 @@ const ToucableDropdown: React.FC<DataParams> = ({
             value={value}
             onFocus={() => setFocusedInput(true)}
             onBlur={() => setFocusedInput(false)}
-            onChange={(item) => handleChange(item.label)} // Pass the text as string to the handler
+            onChange={(item) => {
+              console.log("Selected value: ", item.value);
+              handleChange(item.value);
+            }}
           />
         </View>
       </TouchableWithoutFeedback>
